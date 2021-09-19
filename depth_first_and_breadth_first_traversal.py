@@ -77,12 +77,14 @@ def breadth_first_print_iterative(graph: dict, source: list) -> list:
 
 
 # TESTS
-assert depth_first_print_iterative(GRAPH,
-                                   "a") == ["a", "b", "d", "f", "c", "e"]
+TEST_GRAPH_1 = depth_first_print_iterative(GRAPH, "a")
+assert TEST_GRAPH_1 == ["a", "b", "d", "f", "c", "e"]
 print()
+
 R_LIST: list = []
-assert depth_first_print_recursive(GRAPH, "a",
-                                   R_LIST) == ["a", "c", "e", "b", "d", "f"]
+GRAPH_TEST_2 = depth_first_print_recursive(GRAPH, "a", R_LIST)
+assert GRAPH_TEST_2 == ["a", "c", "e", "b", "d", "f"]
 print()
-assert breadth_first_print_iterative(GRAPH,
-                                     "a") == ["a", "c", "b", "e", "d", "f"]
+
+GRAPH_TEST_3 = breadth_first_print_iterative(GRAPH, "a")
+assert GRAPH_TEST_3 == ["a", "c", "b", "e", "d", "f"]

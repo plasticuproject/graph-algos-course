@@ -40,7 +40,7 @@ GRAPH = {
 
 # Depth first has-path
 def depth_first_has_path_recursive(graph: dict, src: str, dst: str) -> bool:
-    """Depth first has-path recursive algo"""
+    """Depth first has-path recursive algo."""
     if src == dst:
         return True
     for neighbor in graph[src]:
@@ -51,7 +51,7 @@ def depth_first_has_path_recursive(graph: dict, src: str, dst: str) -> bool:
 
 # Breadth first has-path
 def breadth_first_has_path(graph: dict, src: str, dst: str) -> bool:
-    """Breadth first has-path iterative algo"""
+    """Breadth first has-path iterative algo."""
     queue: list = [src]
     while queue:
         current: str = queue.pop(0)
