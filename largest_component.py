@@ -1,4 +1,4 @@
-"""connected_components_count.py"""
+"""largest_component.py"""
 
 # Our 2 component undirected graph structure to play with
 """
@@ -50,22 +50,23 @@ GRAPH = {
 }
 
 
-# Depth first has-path
-def depth_first_has_path_recursive(graph: dict, src: str,
-                                   visited: set) -> bool:
-    """Depth first has-path recursive algo with cyclical checks."""
+# Depth first node count
+def depth_first_count_recursive(graph: dict, src: str, visited: set) -> int:
+    """Depth first node count recursive algo with cyclical checks."""
+    size: int = 1
     if src in visited:
-        return False
+        return 0
     visited.add(src)
     for neighbor in graph[src]:
-        depth_first_has_path_recursive(graph, neighbor, visited)
-    return True
+        size += depth_first_count_recursive(graph, neighbor, visited)
+    return size
 
 
-# Breadth first has-path
-def breadth_first_has_path(graph: dict, src: str, visited: set) -> bool:
-    """Breadth first has-path iterative algo with cyclical checks."""
+# Breadth first node count
+def breadth_first_count(graph: dict, src: str, visited: set) -> int:
+    """Breadth first node count iterative algo with cyclical checks."""
     queue: list = [src]
+    size: int = 1
     while queue:
         current: str = queue.pop(0)
         if current in visited:
@@ -73,35 +74,39 @@ def breadth_first_has_path(graph: dict, src: str, visited: set) -> bool:
         visited.add(current)
         for neighbor in graph[current]:
             queue.append(neighbor)
-    return True
+            size += 1
+    return size
 
 
-# Components count algos
-def connected_components_count(graph: dict) -> int:
+# Largest components node count algos
+def depth_first_largest_component(graph: dict) -> int:
     """Takes in a graph adjacency list, traverses the graph
-    depth-first and returns the number of connected components."""
-    count: int = 0
+    depth-first and returns the number of nodes in the
+    largest connected component."""
+    largest: int = 0
     visited: set = set()
+    size: int
     for node in graph:
-        if depth_first_has_path_recursive(graph, node, visited):
-            count += 1
-    return count
+        size = depth_first_count_recursive(graph, node, visited)
+        if size > largest:
+            largest = size
+    return largest
 
 
-def breadth_first_components_count(graph: dict) -> int:
+def breadth_first_largest_component(graph: dict) -> int:
     """Takes in a graph adjacency list, traverses the graph
-    breadth first and returns the number of connected components."""
-    count: int = 0
+    breadth-first and returns the number of nodes in the
+    largest connected component."""
+    largest: int = 0
     visited: set = set()
-    previous_visited: set = visited.copy()
+    size: int
     for node in graph:
-        breadth_first_has_path(graph, node, visited)
-        if previous_visited != visited:
-            count += 1
-        previous_visited = visited.copy()
-    return count
+        size = depth_first_count_recursive(graph, node, visited)
+        if size > largest:
+            largest = size
+    return largest
 
 
 # TESTS
-assert connected_components_count(GRAPH) == 2
-assert breadth_first_components_count(GRAPH) == 2
+assert depth_first_largest_component(GRAPH) == 4
+assert breadth_first_largest_component(GRAPH) == 4
