@@ -92,17 +92,45 @@ def depth_first_has_path_recursive(graph: dict, src: str, dst: str,
     return False
 
 
-# Undirected graph traversal algo
-def undirected_path(edges: list, node_a: str, node_b: str) -> bool:
+# Breadth first has-path
+def breadth_first_has_path(graph: dict, src: str, dst: str,
+                           visited: set) -> bool:
+    """Breadth first has-path iterative algo with cyclical checks."""
+    queue: list = [src]
+    while queue:
+        current: str = queue.pop(0)
+        if current == dst:
+            return True
+        if current in visited:
+            continue
+        visited.add(current)
+        for neighbor in graph[current]:
+            queue.append(neighbor)
+    return False
+
+
+# Undirected graph traversal algos
+def undirected_path_depth_first(edges: list, node_a: str, node_b: str) -> bool:
     """Undirected depth first has-path recursive algo
     with cyclical checks from edge list input."""
     graph: dict = _build_graph(edges)
     return depth_first_has_path_recursive(graph, node_a, node_b, set())
 
 
+def undirected_path_breadth_first(edges: list, node_a: str,
+                                  node_b: str) -> bool:
+    """Undirected breadth first has-path iterative algo
+    with cyclical checks from edge list input."""
+    graph: dict = _build_graph(edges)
+    return breadth_first_has_path(graph, node_a, node_b, set())
+
+
 # TESTS
 TEST_GRAPH = _build_graph(EDGES)
 assert TEST_GRAPH == GRAPH
 
-assert undirected_path(EDGES, "j", "m")
-assert undirected_path(EDGES, "j", "n") is False
+assert undirected_path_depth_first(EDGES, "j", "m")
+assert undirected_path_depth_first(EDGES, "j", "n") is False
+
+assert undirected_path_breadth_first(EDGES, "j", "m")
+assert undirected_path_breadth_first(EDGES, "j", "n") is False
