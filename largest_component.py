@@ -66,7 +66,7 @@ def depth_first_count_recursive(graph: dict, src: str, visited: set) -> int:
 def breadth_first_count(graph: dict, src: str, visited: set) -> int:
     """Breadth first node count iterative algo with cyclical checks."""
     queue: list = [src]
-    size: int = 1
+    size: int = 0
     while queue:
         current: str = queue.pop(0)
         if current in visited:
@@ -74,7 +74,7 @@ def breadth_first_count(graph: dict, src: str, visited: set) -> int:
         visited.add(current)
         for neighbor in graph[current]:
             queue.append(neighbor)
-            size += 1
+        size += 1
     return size
 
 
@@ -101,7 +101,7 @@ def breadth_first_largest_component(graph: dict) -> int:
     visited: set = set()
     size: int
     for node in graph:
-        size = depth_first_count_recursive(graph, node, visited)
+        size = breadth_first_count(graph, node, visited)
         if size > largest:
             largest = size
     return largest
