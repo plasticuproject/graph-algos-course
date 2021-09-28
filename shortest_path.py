@@ -84,7 +84,6 @@ def depth_first_count_iterative(graph: dict, src: str, dst: str,
         current, distance = stack.pop()
         if current == dst:
             return distance
-        visited.add(src)
         for neighbor in graph[current]:
             if neighbor in visited:
                 continue
@@ -111,7 +110,6 @@ def depth_first_shortest_path(edges: list, node_a: str, node_b: str) -> int:
     are not connected."""
     graph = _build_graph(edges)
     visited: set = set([node_a])
-    # visited: set = set()
     shortest_path = depth_first_count_iterative(graph, node_a, node_b, visited)
     return shortest_path
 
