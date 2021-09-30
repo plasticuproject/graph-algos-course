@@ -1,4 +1,4 @@
-"""island_count.py"""
+"""minimum_island.py"""
 
 # How to navigate grid
 """
@@ -22,38 +22,41 @@ GRID = [
 ]
 
 
-def _explore(grid: list, row: int, column: int, visited: set) -> bool:
+def _explore(grid: list, row: int, column: int, visited: set) -> int:
     """Depth first has-path recursive algo with cyclical checks.
     Explores adjacent nodes that are marked as "L" and are not
-    yet visited."""
+    yet visited, tallying the number of connected nodes."""
     row_in_bounds: bool = 0 <= row < len(grid)
     column_in_bounds: bool = 0 <= column < len(grid[0])
     if not row_in_bounds or not column_in_bounds:
-        return False
+        return 0
     position: str = f"{row},{column}"
     if position in visited:
-        return False
+        return 0
     visited.add(position)
     if grid[row][column] == "W":
-        return False
-    _explore(grid, row - 1, column, visited)
-    _explore(grid, row + 1, column, visited)
-    _explore(grid, row, column - 1, visited)
-    _explore(grid, row, column + 1, visited)
-    return True
+        return 0
+    node_count: int = 1
+    node_count += _explore(grid, row - 1, column, visited)
+    node_count += _explore(grid, row + 1, column, visited)
+    node_count += _explore(grid, row, column - 1, visited)
+    node_count += _explore(grid, row, column + 1, visited)
+    return node_count
 
 
-def island_count(grid: list) -> int:
+def minimum_island_count(grid: list) -> int:
     """Takes in a 2D grid array, iterates over the grid, traverses
     the internal components marked with "L" depth-first and returns
-    the number of connected components within the 2D array."""
-    count: int = 0
+    the number of nodes in the smallest connected component within
+    the 2D array."""
+    count: list = []
     visited: set = set()
     for _r, row in enumerate(grid):
         for _c in range(len(row)):
-            if _explore(grid, _r, _c, visited):
-                count += 1
-    return count
+            connected_nodes = _explore(grid, _r, _c, visited)
+            if connected_nodes > 0:
+                count.append(connected_nodes)
+    return min(count)
 
 
-assert island_count(GRID) == 3
+assert minimum_island_count(GRID) == 2
