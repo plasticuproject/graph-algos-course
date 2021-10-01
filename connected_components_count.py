@@ -1,4 +1,6 @@
 """connected_components_count.py"""
+from collections import deque
+from typing import Deque, Set, Dict, List
 
 # Our 2 component undirected graph structure to play with
 """
@@ -39,7 +41,7 @@
           └───┘
 """
 
-GRAPH = {
+GRAPH: Dict[str, List[str]] = {
     "0": ["8", "1", "5"],
     "1": ["0"],
     "5": ["0", "8"],
@@ -51,8 +53,8 @@ GRAPH = {
 
 
 # Depth first has-path
-def depth_first_has_path_recursive(graph: dict, src: str,
-                                   visited: set) -> bool:
+def depth_first_has_path_recursive(graph: Dict[str, List[str]], src: str,
+                                   visited: Set[str]) -> bool:
     """Depth first has-path recursive algo with cyclical checks."""
     if src in visited:
         return False
@@ -63,11 +65,12 @@ def depth_first_has_path_recursive(graph: dict, src: str,
 
 
 # Breadth first has-path
-def breadth_first_has_path(graph: dict, src: str, visited: set) -> bool:
+def breadth_first_has_path(graph: Dict[str, List[str]], src: str,
+                           visited: Set[str]) -> bool:
     """Breadth first has-path iterative algo with cyclical checks."""
-    queue: list = [src]
+    queue: Deque[str] = deque([src])
     while queue:
-        current: str = queue.pop(0)
+        current: str = queue.popleft()
         if current in visited:
             continue
         visited.add(current)
@@ -77,23 +80,23 @@ def breadth_first_has_path(graph: dict, src: str, visited: set) -> bool:
 
 
 # Components count algos
-def connected_components_count(graph: dict) -> int:
+def connected_components_count(graph: Dict[str, List[str]]) -> int:
     """Takes in a graph adjacency list, traverses the graph
     depth-first and returns the number of connected components."""
     count: int = 0
-    visited: set = set()
+    visited: Set[str] = set()
     for node in graph:
         if depth_first_has_path_recursive(graph, node, visited):
             count += 1
     return count
 
 
-def breadth_first_components_count(graph: dict) -> int:
+def breadth_first_components_count(graph: Dict[str, List[str]]) -> int:
     """Takes in a graph adjacency list, traverses the graph
     breadth first and returns the number of connected components."""
     count: int = 0
-    visited: set = set()
-    previous_visited: set = visited.copy()
+    visited: Set[str] = set()
+    previous_visited: Set[str] = visited.copy()
     for node in graph:
         breadth_first_has_path(graph, node, visited)
         if previous_visited != visited:

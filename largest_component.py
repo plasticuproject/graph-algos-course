@@ -1,4 +1,6 @@
 """largest_component.py"""
+from collections import deque
+from typing import Deque, List, Dict, Set
 
 # Our 2 component undirected graph structure to play with
 """
@@ -39,7 +41,7 @@
           └───┘
 """
 
-GRAPH = {
+GRAPH: Dict[str, List[str]] = {
     "0": ["8", "1", "5"],
     "1": ["0"],
     "5": ["0", "8"],
@@ -51,7 +53,8 @@ GRAPH = {
 
 
 # Depth first node count
-def depth_first_count_recursive(graph: dict, src: str, visited: set) -> int:
+def depth_first_count_recursive(graph: Dict[str, List[str]], src: str,
+                                visited: Set[str]) -> int:
     """Depth first node count recursive algo with cyclical checks."""
     size: int = 1
     if src in visited:
@@ -63,12 +66,13 @@ def depth_first_count_recursive(graph: dict, src: str, visited: set) -> int:
 
 
 # Breadth first node count
-def breadth_first_count(graph: dict, src: str, visited: set) -> int:
+def breadth_first_count(graph: Dict[str, List[str]], src: str,
+                        visited: Set[str]) -> int:
     """Breadth first node count iterative algo with cyclical checks."""
-    queue: list = [src]
+    queue: Deque[str] = deque([src])
     size: int = 0
     while queue:
-        current: str = queue.pop(0)
+        current: str = queue.popleft()
         if current in visited:
             continue
         visited.add(current)
@@ -79,29 +83,29 @@ def breadth_first_count(graph: dict, src: str, visited: set) -> int:
 
 
 # Largest components node count algos
-def depth_first_largest_component(graph: dict) -> int:
+def depth_first_largest_component(graph: Dict[str, List[str]]) -> int:
     """Takes in a graph adjacency list, traverses the graph
     depth-first and returns the number of nodes in the
     largest connected component."""
     largest: int = 0
-    visited: set = set()
+    visited: Set[str] = set()
     size: int
     for node in graph:
-        size = depth_first_count_recursive(graph, node, visited)
+        size: int = depth_first_count_recursive(graph, node, visited)
         if size > largest:
             largest = size
     return largest
 
 
-def breadth_first_largest_component(graph: dict) -> int:
+def breadth_first_largest_component(graph: Dict[str, List[str]]) -> int:
     """Takes in a graph adjacency list, traverses the graph
     breadth-first and returns the number of nodes in the
     largest connected component."""
     largest: int = 0
-    visited: set = set()
+    visited: Set[str] = set()
     size: int
     for node in graph:
-        size = breadth_first_count(graph, node, visited)
+        size: int = breadth_first_count(graph, node, visited)
         if size > largest:
             largest = size
     return largest

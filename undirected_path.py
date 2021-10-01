@@ -1,4 +1,6 @@
 """undirected_path.py"""
+from collections import deque
+from typing import Deque, List, Dict, Set
 
 # Our simple undirected graph structure to play with
 """
@@ -40,7 +42,7 @@
 """
 
 # Edge list
-EDGES = [
+EDGES: List[List[str]] = [
     ["i", "j"],
     ["k", "i"],
     ["m", "k"],
@@ -49,7 +51,7 @@ EDGES = [
 ]
 
 # Convert to adjacency list, used to test against
-GRAPH = {
+GRAPH: Dict[str, List[str]] = {
     "i": ["j", "k"],
     "j": ["i"],
     "k": ["i", "m", "l"],
@@ -61,25 +63,25 @@ GRAPH = {
 
 
 # Helper function
-def _build_graph(edges: list) -> dict:
+def _build_graph(edges: List[List[str]]) -> Dict[str, List[str]]:
     """Helper function to build undirected graph from edges."""
-    graph: dict = {}
+    graph: Dict[str, List[str]] = dict()
     _a: str
     _b: str
     for edge in edges:
-        [_a, _b] = edge
+        _a, _b = edge
         if _a not in graph:
-            graph[_a] = []
+            graph[_a] = list()
         if _b not in graph:
-            graph[_b] = []
+            graph[_b] = list()
         graph[_a].append(_b)
         graph[_b].append(_a)
     return graph
 
 
 # Depth first has-path
-def depth_first_has_path_recursive(graph: dict, src: str, dst: str,
-                                   visited: set) -> bool:
+def depth_first_has_path_recursive(graph: Dict[str, List[str]], src: str,
+                                   dst: str, visited: Set[str]) -> bool:
     """Depth first has-path recursive algo with cyclical checks."""
     if src == dst:
         return True
@@ -93,12 +95,12 @@ def depth_first_has_path_recursive(graph: dict, src: str, dst: str,
 
 
 # Breadth first has-path
-def breadth_first_has_path(graph: dict, src: str, dst: str,
-                           visited: set) -> bool:
+def breadth_first_has_path(graph: Dict[str, List[str]], src: str, dst: str,
+                           visited: Set[str]) -> bool:
     """Breadth first has-path iterative algo with cyclical checks."""
-    queue: list = [src]
+    queue: Deque[str] = deque([src])
     while queue:
-        current: str = queue.pop(0)
+        current: str = queue.popleft()
         if current == dst:
             return True
         if current in visited:
@@ -110,23 +112,24 @@ def breadth_first_has_path(graph: dict, src: str, dst: str,
 
 
 # Undirected graph traversal algos
-def undirected_path_depth_first(edges: list, node_a: str, node_b: str) -> bool:
+def undirected_path_depth_first(edges: List[List[str]], node_a: str,
+                                node_b: str) -> bool:
     """Undirected depth first has-path recursive algo
     with cyclical checks from edge list input."""
-    graph: dict = _build_graph(edges)
+    graph: Dict[str, List[str]] = _build_graph(edges)
     return depth_first_has_path_recursive(graph, node_a, node_b, set())
 
 
-def undirected_path_breadth_first(edges: list, node_a: str,
+def undirected_path_breadth_first(edges: List[List[str]], node_a: str,
                                   node_b: str) -> bool:
     """Undirected breadth first has-path iterative algo
     with cyclical checks from edge list input."""
-    graph: dict = _build_graph(edges)
+    graph: Dict[str, List[str]] = _build_graph(edges)
     return breadth_first_has_path(graph, node_a, node_b, set())
 
 
 # TESTS
-TEST_GRAPH = _build_graph(EDGES)
+TEST_GRAPH: Dict[str, List[str]] = _build_graph(EDGES)
 assert TEST_GRAPH == GRAPH
 
 assert undirected_path_depth_first(EDGES, "j", "m")

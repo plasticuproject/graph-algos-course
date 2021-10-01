@@ -1,4 +1,6 @@
 """shortest_path.py"""
+from collections import deque
+from typing import Deque, List, Dict, Set
 
 # Our simple undirected graph structure to play with
 """
@@ -20,7 +22,7 @@
 """
 
 # Edge list
-EDGES = [
+EDGES: List[List[str]] = [
     ["w", "x"],
     ["x", "y"],
     ["z", "y"],
@@ -29,7 +31,7 @@ EDGES = [
 ]
 
 # Convert to adjacency list, used to test against
-GRAPH = {
+GRAPH: Dict[str, List[str]] = {
     "w": ["x", "v"],
     "x": ["w", "y"],
     "y": ["x", "z"],
@@ -39,30 +41,33 @@ GRAPH = {
 
 
 # Helper function
-def _build_graph(edges: list) -> dict:
+def _build_graph(edges: List[List[str]]) -> Dict[str, List[str]]:
     """Helper function to build undirected graph from edges."""
-    graph: dict = {}
+    graph: Dict[str, List[str]] = dict()
     _a: str
     _b: str
     for edge in edges:
-        [_a, _b] = edge
+        _a, _b = edge
         if _a not in graph:
-            graph[_a] = []
+            graph[_a]: List[str] = list()
         if _b not in graph:
-            graph[_b] = []
+            graph[_b]: List[str] = list()
         graph[_a].append(_b)
         graph[_b].append(_a)
     return graph
 
 
 # Breadth first edge count
-def breadth_first_count(graph: dict, src: str, dst: str, visited: set) -> int:
+def breadth_first_count(graph: Dict[str, List[str]], src: str, dst: str,
+                        visited: Set[str]) -> int:
     """Breadth first edge count iterative algo with cyclical checks.
     Returns shortest amount of edgest between two nodes, or -1 if
     components are not connected."""
-    queue: list = [[src, 0]]
+    current: str
+    distance: int
+    queue: Deque[List[str, int]] = deque([[src, 0]])
     while queue:
-        current, distance = queue.pop(0)
+        current, distance = queue.popleft()
         if current == dst:
             return distance
         for neighbor in graph[current]:
@@ -74,12 +79,14 @@ def breadth_first_count(graph: dict, src: str, dst: str, visited: set) -> int:
 
 
 # Depth first edge count
-def depth_first_count_iterative(graph: dict, src: str, dst: str,
-                                visited: set) -> int:
+def depth_first_count_iterative(graph: Dict[str, List[str]], src: str,
+                                dst: str, visited: Set[str]) -> int:
     """Depth first edge count recursive algo with cyclical checks.
     Returns shortest amount of edgest between two nodes, or -1 if
     components are not connected."""
-    stack: list = [[src, 0]]
+    current: str
+    distance: int
+    stack: Deque[List[str, int]] = deque([[src, 0]])
     while stack:
         current, distance = stack.pop()
         if current == dst:
@@ -92,25 +99,28 @@ def depth_first_count_iterative(graph: dict, src: str, dst: str,
     return -1
 
 
-def breadth_first_shortest_path(edges: list, node_a: str, node_b: str) -> int:
+def breadth_first_shortest_path(edges: List[List[str]], node_a: str,
+                                node_b: str) -> int:
     """Takes in a graph adjacency list, traverses the graph
     breadth-first and returns the number of edges from the
     source node to the destination node, or -1 if components
     are not connected."""
-    graph = _build_graph(edges)
-    visited: set = set([node_a])
-    shortest_path = breadth_first_count(graph, node_a, node_b, visited)
+    graph: Dict[str, List[str]] = _build_graph(edges)
+    visited: Set[str] = set(node_a)
+    shortest_path: int = breadth_first_count(graph, node_a, node_b, visited)
     return shortest_path
 
 
-def depth_first_shortest_path(edges: list, node_a: str, node_b: str) -> int:
+def depth_first_shortest_path(edges: List[List[str]], node_a: str,
+                              node_b: str) -> int:
     """Takes in a graph adjacency list, traverses the graph
     depth-first and returns the number of edges from the
     source node to the destination node, or -1 if components
     are not connected."""
-    graph = _build_graph(edges)
-    visited: set = set([node_a])
-    shortest_path = depth_first_count_iterative(graph, node_a, node_b, visited)
+    graph: Dict[str, List[str]] = _build_graph(edges)
+    visited: Set[str] = set(node_a)
+    shortest_path: int = depth_first_count_iterative(graph, node_a, node_b,
+                                                     visited)
     return shortest_path
 
 

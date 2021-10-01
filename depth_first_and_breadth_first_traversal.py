@@ -1,4 +1,6 @@
 """depth_first_and_breadth_first_traversal.py"""
+from collections import deque
+from typing import Deque, Dict, List
 
 # Our simple graph structure to play with
 """
@@ -28,7 +30,7 @@
 │   │     │   │
 └───┘     └───┘
 """
-GRAPH = {
+GRAPH: Dict[str, List[str]] = {
     "a": ["c", "b"],
     "b": ["d"],
     "c": ["e"],
@@ -39,10 +41,11 @@ GRAPH = {
 
 
 # Depth first traversal algos
-def depth_first_print_iterative(graph: dict, source: str) -> list:
+def depth_first_print_iterative(graph: Dict[str, List[str]],
+                                source: str) -> List[str]:
     """Depth first print iterative algo."""
-    stack: list = [source]
-    r_list: list = []
+    stack: Deque[str] = deque([source])
+    r_list: List[str] = list()
     while stack:
         current: str = stack.pop()
         print(current)
@@ -52,8 +55,8 @@ def depth_first_print_iterative(graph: dict, source: str) -> list:
     return r_list
 
 
-def depth_first_print_recursive(graph: dict, source: str,
-                                r_list: list) -> list:
+def depth_first_print_recursive(graph: Dict[str, List[str]], source: str,
+                                r_list: List[str]) -> List[str]:
     """Depth first print recursive algo."""
     print(source)
     r_list.append(source)
@@ -63,12 +66,13 @@ def depth_first_print_recursive(graph: dict, source: str,
 
 
 # Breadth first traversal algo
-def breadth_first_print_iterative(graph: dict, source: list) -> list:
+def breadth_first_print_iterative(graph: Dict[str, List[str]],
+                                  source: str) -> List[str]:
     """Breadth first print iterative algo."""
-    queue: list = [source]
-    r_list: list = []
+    queue: Deque[str] = deque([source])
+    r_list: List[str] = list()
     while queue:
-        current: str = queue.pop(0)
+        current: str = queue.popleft()
         print(current)
         r_list.append(current)
         for neighbor in graph[current]:
@@ -77,14 +81,14 @@ def breadth_first_print_iterative(graph: dict, source: list) -> list:
 
 
 # TESTS
-TEST_GRAPH_1 = depth_first_print_iterative(GRAPH, "a")
+TEST_GRAPH_1: List[str] = depth_first_print_iterative(GRAPH, "a")
 assert TEST_GRAPH_1 == ["a", "b", "d", "f", "c", "e"]
 print()
 
-R_LIST: list = []
+R_LIST: List[str] = list()
 GRAPH_TEST_2 = depth_first_print_recursive(GRAPH, "a", R_LIST)
 assert GRAPH_TEST_2 == ["a", "c", "e", "b", "d", "f"]
 print()
 
-GRAPH_TEST_3 = breadth_first_print_iterative(GRAPH, "a")
+GRAPH_TEST_3: List[str] = breadth_first_print_iterative(GRAPH, "a")
 assert GRAPH_TEST_3 == ["a", "c", "b", "e", "d", "f"]
