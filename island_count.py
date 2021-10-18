@@ -24,7 +24,7 @@ GRID: List[List[str]] = [
 
 
 def _explore(grid: List[List[str]], row: int, column: int,
-             visited: Set[Tuple[int]]) -> bool:
+             visited: Set[Tuple[int, int]]) -> bool:
     """Depth first has-path recursive algo with cyclical checks.
     Explores adjacent nodes that are marked as "L" and are not
     yet visited."""
@@ -32,7 +32,7 @@ def _explore(grid: List[List[str]], row: int, column: int,
     column_in_bounds: bool = 0 <= column < len(grid[0])
     if not row_in_bounds or not column_in_bounds:
         return False
-    position: Tuple(int) = (row, column)
+    position: Tuple[int, int] = (row, column)
     if position in visited:
         return False
     visited.add(position)
@@ -50,7 +50,7 @@ def island_count(grid: List[List[str]]) -> int:
     the internal components marked with "L" depth-first and returns
     the number of connected components within the 2D array."""
     count: int = 0
-    visited: Set[Tuple[int]] = set()
+    visited: Set[Tuple[int, int]] = set()
     for _r, row in enumerate(grid):
         for _c in range(len(row)):
             if _explore(grid, _r, _c, visited):

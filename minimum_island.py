@@ -24,7 +24,7 @@ GRID: List[List[str]] = [
 
 
 def _explore(grid: List[List[str]], row: int, column: int,
-             visited: Set[Tuple[int]]) -> int:
+             visited: Set[Tuple[int, int]]) -> int:
     """Depth first has-path recursive algo with cyclical checks.
     Explores adjacent nodes that are marked as "L" and are not
     yet visited, tallying the number of connected nodes."""
@@ -32,7 +32,7 @@ def _explore(grid: List[List[str]], row: int, column: int,
     column_in_bounds: bool = 0 <= column < len(grid[0])
     if not row_in_bounds or not column_in_bounds:
         return 0
-    position: Tuple[int] = (row, column)
+    position: Tuple[int, int] = (row, column)
     if position in visited:
         return 0
     visited.add(position)
@@ -52,7 +52,7 @@ def minimum_island_count(grid: List[List[str]]) -> int:
     the number of nodes in the smallest connected component within
     the 2D array."""
     count: Set[int] = set()
-    visited: Set[Tuple[int]] = set()
+    visited: Set[Tuple[int, int]] = set()
     for _r, row in enumerate(grid):
         for _c in range(len(row)):
             connected_nodes: int = _explore(grid, _r, _c, visited)

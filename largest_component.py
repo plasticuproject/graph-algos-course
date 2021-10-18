@@ -91,7 +91,7 @@ def depth_first_largest_component(graph: Dict[str, List[str]]) -> int:
     visited: Set[str] = set()
     size: int
     for node in graph:
-        size: int = depth_first_count_recursive(graph, node, visited)
+        size = depth_first_count_recursive(graph, node, visited)
         if size > largest:
             largest = size
     return largest
@@ -105,7 +105,7 @@ def breadth_first_largest_component(graph: Dict[str, List[str]]) -> int:
     visited: Set[str] = set()
     size: int
     for node in graph:
-        size: int = breadth_first_count(graph, node, visited)
+        size = breadth_first_count(graph, node, visited)
         if size > largest:
             largest = size
     return largest

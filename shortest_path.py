@@ -1,6 +1,6 @@
 """shortest_path.py"""
 from collections import deque
-from typing import Deque, List, Dict, Set
+from typing import Deque, List, Dict, Set, Union
 
 # Our simple undirected graph structure to play with
 """
@@ -49,9 +49,9 @@ def _build_graph(edges: List[List[str]]) -> Dict[str, List[str]]:
     for edge in edges:
         _a, _b = edge
         if _a not in graph:
-            graph[_a]: List[str] = list()
+            graph[_a] = list()
         if _b not in graph:
-            graph[_b]: List[str] = list()
+            graph[_b] = list()
         graph[_a].append(_b)
         graph[_b].append(_a)
     return graph
@@ -63,18 +63,16 @@ def breadth_first_count(graph: Dict[str, List[str]], src: str, dst: str,
     """Breadth first edge count iterative algo with cyclical checks.
     Returns shortest amount of edgest between two nodes, or -1 if
     components are not connected."""
-    current: str
-    distance: int
-    queue: Deque[List[str, int]] = deque([[src, 0]])
+    queue: Deque[List[Union[str, int]]] = deque([[src, 0]])
     while queue:
         current, distance = queue.popleft()
         if current == dst:
-            return distance
-        for neighbor in graph[current]:
+            return int(distance)
+        for neighbor in graph[str(current)]:
             if neighbor in visited:
                 continue
             visited.add(neighbor)
-            queue.append([neighbor, distance + 1])
+            queue.append([neighbor, int(distance) + 1])
     return -1
 
 
@@ -84,18 +82,16 @@ def depth_first_count_iterative(graph: Dict[str, List[str]], src: str,
     """Depth first edge count recursive algo with cyclical checks.
     Returns shortest amount of edgest between two nodes, or -1 if
     components are not connected."""
-    current: str
-    distance: int
-    stack: Deque[List[str, int]] = deque([[src, 0]])
+    stack: Deque[List[Union[str, int]]] = deque([[src, 0]])
     while stack:
         current, distance = stack.pop()
         if current == dst:
-            return distance
-        for neighbor in graph[current]:
+            return int(distance)
+        for neighbor in graph[str(current)]:
             if neighbor in visited:
                 continue
             visited.add(neighbor)
-            stack.append([neighbor, distance + 1])
+            stack.append([neighbor, int(distance) + 1])
     return -1
 
 
