@@ -1,53 +1,55 @@
-use std::collections::{HashMap, HashSet, VecDeque};
+use crate::graph::Graph;
+use std::collections::VecDeque;
 
-pub struct Graph {
-    pub nodes: HashMap<String, Vec<String>>,
+#[allow(dead_code)]
+trait Dfs {
+    fn depth_first_print_iterative(&self, src: &str) -> Vec<String>;
+    fn depth_first_print_recursive(&self, src: &str, r_list: &mut Vec<String>) -> Vec<String>;
 }
 
-impl Default for Graph {
-    fn default() -> Self {
-        Self::new()
-    }
+#[allow(dead_code)]
+trait Bfs {
+    fn breadth_first_print_iterative(&self, src: &str) -> Vec<String>;
 }
 
-impl Graph {
-    #[must_use]
-    pub fn new() -> Self {
-        Self {
-            nodes: HashMap::new(),
+impl Dfs for Graph {
+    fn depth_first_print_iterative(&self, src: &str) -> Vec<String> {
+        let mut stack = VecDeque::new();
+        stack.push_back(src.to_string());
+        let mut r_list = Vec::new();
+
+        while let Some(current) = stack.pop_back() {
+            println!("{current:?}");
+            r_list.push(current.clone());
+            if let Some(neighbors) = self.nodes.get(&current) {
+                for neighbor in neighbors {
+                    stack.push_back(neighbor.clone());
+                }
+            }
         }
+        r_list
     }
 
-    pub fn add_node(&mut self, node: &str, connections: &[&str]) {
-        self.nodes.insert(
-            node.to_string(),
-            connections.iter().map(|&s| s.to_string()).collect(),
-        );
-    }
-
-    // Depth first has-path recursive algo with cyclical checks
-    fn depth_first_has_path_recursive(&self, src: &str, visited: &mut HashSet<String>) {
-        if visited.contains(src) {
-            return;
-        }
-        visited.insert(src.to_string());
+    fn depth_first_print_recursive(&self, src: &str, r_list: &mut Vec<String>) -> Vec<String> {
+        println!("{src:?}");
+        r_list.push(src.to_string());
         if let Some(neighbors) = self.nodes.get(src) {
             for neighbor in neighbors {
-                self.depth_first_has_path_recursive(neighbor, visited);
+                self.depth_first_print_recursive(neighbor, r_list);
             }
         }
+        r_list.clone()
     }
+}
 
-    // Breadth first has-path iterative algo with cyclical checks
-    fn breadth_first_has_path(&self, src: &str, visited: &mut HashSet<String>) -> bool {
+impl Bfs for Graph {
+    fn breadth_first_print_iterative(&self, src: &str) -> Vec<String> {
         let mut queue = VecDeque::new();
         queue.push_back(src.to_string());
-
+        let mut r_list = Vec::new();
         while let Some(current) = queue.pop_front() {
-            if visited.contains(&current) {
-                continue;
-            }
-            visited.insert(current.clone());
+            println!("{current:?}");
+            r_list.push(current.clone());
 
             if let Some(neighbors) = self.nodes.get(&current) {
                 for neighbor in neighbors {
@@ -55,108 +57,72 @@ impl Graph {
                 }
             }
         }
-        true
-    }
-
-    // Connected components count using DFS
-    #[must_use]
-    pub fn connected_components_count(&self) -> usize {
-        let mut count = 0;
-        let mut visited = HashSet::new();
-
-        for node in self.nodes.keys() {
-            if !visited.contains(node) {
-                self.depth_first_has_path_recursive(node, &mut visited);
-                count += 1;
-            }
-        }
-
-        count
-    }
-
-    // Connected components count using BFS
-    #[must_use]
-    pub fn breadth_first_components_count(&self) -> usize {
-        let mut count = 0;
-        let mut visited = HashSet::new();
-        let mut previous_visited = visited.clone();
-
-        for node in self.nodes.keys() {
-            self.breadth_first_has_path(node, &mut visited);
-            if previous_visited != visited {
-                count += 1;
-            }
-            //previous_visited = visited.clone();
-            previous_visited.clone_from(&visited);
-        }
-
-        count
+        r_list
     }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    // Our 2 component undirected graph structure to play with
-    //
-    // ┌───┐     ┌───┐     ┌───┐
-    // │   │     │   │     │   │
-    // │ 1 ├─────┤ 0 ├─────┤ 5 │
-    // │   │     │   │     │   │
-    // └───┘     └─┬─┘     └─┬─┘
-    //             │         │
-    //             │         │
-    //             │         │
-    //             │         │
-    //             │         │
-    //           ┌─┴─┐       │
-    //           │   │       │
-    //           │ 8 ├───────┘
-    //           │   │
-    //           └───┘
-    //
-    //
-    //
-    //
+
+    // # Our simple graph structure to play with
     //
     // ┌───┐     ┌───┐
     // │   │     │   │
-    // │ 2 ├─────┤ 3 │
+    // │ a ├────►│ b │
     // │   │     │   │
     // └─┬─┘     └─┬─┘
     //   │         │
     //   │         │
     //   │         │
     //   │         │
+    //   ▼         ▼
+    // ┌───┐     ┌───┐
+    // │   │     │   │
+    // │ c │     │ d │
+    // │   │     │   │
+    // └─┬─┘     └─┬─┘
     //   │         │
-    //   │       ┌─┴─┐
-    //   │       │   │
-    //   └───────┤ 4 │
-    //           │   │
-    //           └───┘
+    //   │         │
+    //   │         │
+    //   │         │
+    //   ▼         ▼
+    // ┌───┐     ┌───┐
+    // │   │     │   │
+    // │ e │     │ f │
+    // │   │     │   │
+    // └───┘     └───┘
     //
 
     fn create_graph() -> Graph {
         let mut graph = Graph::new();
-        graph.add_node("0", &["8", "1", "5"]);
-        graph.add_node("1", &["0"]);
-        graph.add_node("5", &["0", "8"]);
-        graph.add_node("8", &["0", "5"]);
-        graph.add_node("2", &["3", "4"]);
-        graph.add_node("3", &["2", "4"]);
-        graph.add_node("4", &["3", "2"]);
+        graph.add_node("a", &["c", "b"]);
+        graph.add_node("b", &["d"]);
+        graph.add_node("c", &["e"]);
+        graph.add_node("d", &["f"]);
+        graph.add_node("e", &[]);
+        graph.add_node("f", &[]);
         graph
     }
 
     #[test]
-    fn connected_components_count_test() {
+    fn depth_first_print_iterative_test() {
         let graph: Graph = create_graph();
-        assert!(graph.connected_components_count() == 2);
+        assert!(graph.depth_first_print_iterative("a") == ["a", "b", "d", "f", "c", "e"]);
     }
 
     #[test]
-    fn breadth_first_components_count_test() {
+    fn depth_first_print_recursive_test() {
         let graph: Graph = create_graph();
-        assert!(graph.breadth_first_components_count() == 2);
+        let mut r_list: Vec<String> = Vec::new();
+        assert!(
+            graph.depth_first_print_recursive("a", &mut r_list) == ["a", "c", "e", "b", "d", "f"]
+        );
+    }
+
+    #[test]
+    fn breadth_first_print_iterative_test() {
+        let graph: Graph = create_graph();
+        assert!(graph.breadth_first_print_iterative("a") == ["a", "c", "b", "e", "d", "f"]);
     }
 }
