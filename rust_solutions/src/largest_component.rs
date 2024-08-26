@@ -3,49 +3,55 @@ use std::collections::{HashSet, VecDeque};
 
 #[allow(dead_code)]
 trait Dfs {
-    fn depth_first_has_path_recursive(&self, src: &str, visited: &mut HashSet<String>);
-    fn connected_components_count(&self) -> i32;
+    fn depth_first_count_recursive(&self, src: &str, visited: &mut HashSet<String>) -> i32;
+    fn depth_first_largest_component(&self) -> i32;
 }
 
 #[allow(dead_code)]
 trait Bfs {
-    fn breadth_first_has_path(&self, src: &str, visited: &mut HashSet<String>) -> bool;
-    fn breadth_first_components_count(&self) -> i32;
+    fn breadth_first_count(&self, src: &str, visited: &mut HashSet<String>) -> i32;
+    fn breadth_first_largest_component(&self) -> i32;
 }
 
 impl Dfs for Graph {
-    fn depth_first_has_path_recursive(&self, src: &str, visited: &mut HashSet<String>) {
+    fn depth_first_count_recursive(&self, src: &str, visited: &mut HashSet<String>) -> i32 {
         if visited.contains(src) {
-            return;
+            return 0;
         }
+        let mut size = 1;
         visited.insert(src.to_string());
         if let Some(neighbors) = self.nodes.get(src) {
             for neighbor in neighbors {
-                self.depth_first_has_path_recursive(neighbor, visited);
+                size += self.depth_first_count_recursive(neighbor, visited);
             }
         }
+        size
     }
 
-    fn connected_components_count(&self) -> i32 {
+    fn depth_first_largest_component(&self) -> i32 {
         // Takes in a graph adjacency list, traverses the graph
-        // depth-first and returns the number of connected components.
+        // depth-first and returns the number of nodes in the
+        // largest connected component.
 
-        let mut count = 0;
+        let mut largest = 0;
         let mut visited = HashSet::new();
         for node in self.nodes.keys() {
             if !visited.contains(node) {
-                self.depth_first_has_path_recursive(node, &mut visited);
-                count += 1;
+                let size = self.depth_first_count_recursive(node, &mut visited);
+                if size > largest {
+                    largest = size;
+                }
             }
         }
-        count
+        largest
     }
 }
 
 impl Bfs for Graph {
-    fn breadth_first_has_path(&self, src: &str, visited: &mut HashSet<String>) -> bool {
+    fn breadth_first_count(&self, src: &str, visited: &mut HashSet<String>) -> i32 {
         let mut queue = VecDeque::new();
         queue.push_back(src.to_string());
+        let mut size = 0;
         while let Some(current) = queue.pop_front() {
             if visited.contains(&current) {
                 continue;
@@ -55,33 +61,33 @@ impl Bfs for Graph {
                 for neighbor in neighbors {
                     queue.push_back(neighbor.clone());
                 }
+                size += 1;
             }
         }
-        true
+        size
     }
 
-    fn breadth_first_components_count(&self) -> i32 {
+    // Connected components count using BFS
+    fn breadth_first_largest_component(&self) -> i32 {
         // Takes in a graph adjacency list, traverses the graph
-        // breadth first and returns the number of connected components.
+        // breadth-first and returns the number of nodes in the
+        // largest connected component.
 
-        let mut count = 0;
+        let mut largest = 0;
         let mut visited = HashSet::new();
-        let mut previous_visited = visited.clone();
         for node in self.nodes.keys() {
-            self.breadth_first_has_path(node, &mut visited);
-            if previous_visited != visited {
-                count += 1;
+            let size = self.breadth_first_count(node, &mut visited);
+            if size > largest {
+                largest = size;
             }
-            previous_visited.clone_from(&visited);
         }
-        count
+        largest
     }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
-
     // Our 2 component undirected graph structure to play with
     //
     // ┌───┐     ┌───┐     ┌───┐
@@ -134,14 +140,14 @@ mod tests {
     }
 
     #[test]
-    fn connected_components_count_test() {
+    fn depth_first_largest_component_test() {
         let graph: Graph = create_graph();
-        assert!(graph.connected_components_count() == 2);
+        assert!(graph.depth_first_largest_component() == 4);
     }
 
     #[test]
-    fn breadth_first_components_count_test() {
+    fn breadth_first_largest_component_test() {
         let graph: Graph = create_graph();
-        assert!(graph.breadth_first_components_count() == 2);
+        assert!(graph.breadth_first_largest_component() == 4);
     }
 }

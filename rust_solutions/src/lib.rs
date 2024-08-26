@@ -4,6 +4,7 @@ mod graph;
 mod grid;
 mod has_path;
 mod island_count;
+mod largest_component;
 mod minimum_island;
 
 pub use graph::Graph;
