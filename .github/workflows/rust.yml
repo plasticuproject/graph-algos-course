@@ -1,0 +1,19 @@
+name: Rust Test
+
+on: push
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Lint
+      run: cd rust_solutions && cargo clippy --verbose
+    - name: Test
+      run: cd rust_solutions && cargo test --release --verbose
+
