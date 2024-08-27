@@ -61,7 +61,7 @@ impl Bfs for Graph {
                         continue;
                     }
                     visited.insert(neighbor.clone());
-                    queue.push_front((neighbor.clone(), distance + 1));
+                    queue.push_back((neighbor.clone(), distance + 1));
                 }
             }
         }

@@ -7,6 +7,7 @@ mod island_count;
 mod largest_component;
 mod minimum_island;
 mod shortest_path;
+mod undirected_path;
 
 pub use graph::Graph;
 pub use grid::Grid;
