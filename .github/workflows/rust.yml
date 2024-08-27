@@ -1,4 +1,4 @@
-name: Lint Build Deploy
+name: Rust Test
 
 on: push
 
