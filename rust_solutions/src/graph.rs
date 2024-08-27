@@ -1,4 +1,3 @@
-use std::cmp::Ordering;
 use std::collections::HashMap;
 
 #[derive(Clone)]
@@ -29,20 +28,14 @@ impl Graph {
         );
     }
 
-    #[allow(clippy::missing_errors_doc)]
-    pub fn add_edge(&mut self, edge: &[&str]) -> Result<(), String> {
-        match edge.len().cmp(&2) {
-            Ordering::Greater => Err(format!("Edge length {} exceeds maximum of 2", edge.len(),)),
-            Ordering::Less => Err(format!(
-                "Edge length {} is less than minimum of 2",
-                edge.len(),
-            )),
-            Ordering::Equal => {
-                self.edges
-                    .push(edge.iter().map(|&s| s.to_string()).collect());
-                Ok(())
-            }
-        }
+    #[allow(clippy::missing_panics_doc)]
+    pub fn add_edge(&mut self, edge: &[&str]) {
+        assert!(
+            i32::try_from(edge.len()).expect("Count not convert from usize to i32") == 2,
+            "Only accepts 2 nodes"
+        );
+        self.edges
+            .push(edge.iter().map(|&s| s.to_string()).collect());
     }
 
     pub fn build_graph_from_edges(&mut self) {
@@ -84,11 +77,11 @@ mod tests {
 
     fn create_graph_with_edges() -> Graph {
         let mut graph = Graph::new();
-        let _ = graph.add_edge(&["w", "x"]).is_ok();
-        let _ = graph.add_edge(&["x", "y"]).is_ok();
-        let _ = graph.add_edge(&["z", "y"]).is_ok();
-        let _ = graph.add_edge(&["z", "v"]).is_ok();
-        let _ = graph.add_edge(&["w", "v"]).is_ok();
+        graph.add_edge(&["w", "x"]);
+        graph.add_edge(&["x", "y"]);
+        graph.add_edge(&["z", "y"]);
+        graph.add_edge(&["z", "v"]);
+        graph.add_edge(&["w", "v"]);
         graph.build_graph_from_edges();
         graph
     }
@@ -128,9 +121,9 @@ mod tests {
     }
 
     #[test]
-    #[should_panic(expected = "Edge length 3 exceeds maximum of 2")]
+    #[should_panic(expected = "Only accepts 2 nodes")]
     fn edges_test_invalid_row_length() {
         let mut graph = Graph::new();
-        graph.add_edge(&["x", "y", "z"]).unwrap();
+        graph.add_edge(&["x", "y", "z"]);
     }
 }

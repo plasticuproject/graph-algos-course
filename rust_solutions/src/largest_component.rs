@@ -29,9 +29,9 @@ impl Dfs for Graph {
     }
 
     fn depth_first_largest_component(&self) -> i32 {
-        // Takes in a graph adjacency list, traverses the graph
-        // depth-first and returns the number of nodes in the
-        // largest connected component.
+        //Takes in a graph adjacency list, traverses the graph
+        //depth-first and returns the number of nodes in the
+        //largest connected component.
 
         let mut largest = 0;
         let mut visited = HashSet::new();
@@ -69,9 +69,9 @@ impl Bfs for Graph {
 
     // Connected components count using BFS
     fn breadth_first_largest_component(&self) -> i32 {
-        // Takes in a graph adjacency list, traverses the graph
-        // breadth-first and returns the number of nodes in the
-        // largest connected component.
+        //Takes in a graph adjacency list, traverses the graph
+        //breadth-first and returns the number of nodes in the
+        //largest connected component.
 
         let mut largest = 0;
         let mut visited = HashSet::new();
@@ -88,6 +88,7 @@ impl Bfs for Graph {
 #[cfg(test)]
 mod tests {
     use super::*;
+
     // Our 2 component undirected graph structure to play with
     //
     // ┌───┐     ┌───┐     ┌───┐

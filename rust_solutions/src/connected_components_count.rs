@@ -27,8 +27,8 @@ impl Dfs for Graph {
     }
 
     fn connected_components_count(&self) -> i32 {
-        // Takes in a graph adjacency list, traverses the graph
-        // depth-first and returns the number of connected components.
+        //Takes in a graph adjacency list, traverses the graph
+        //depth-first and returns the number of connected components.
 
         let mut count = 0;
         let mut visited = HashSet::new();
@@ -61,8 +61,8 @@ impl Bfs for Graph {
     }
 
     fn breadth_first_components_count(&self) -> i32 {
-        // Takes in a graph adjacency list, traverses the graph
-        // breadth first and returns the number of connected components.
+        //Takes in a graph adjacency list, traverses the graph
+        //breadth first and returns the number of connected components.
 
         let mut count = 0;
         let mut visited = HashSet::new();

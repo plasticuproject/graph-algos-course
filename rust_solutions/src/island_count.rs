@@ -9,9 +9,9 @@ trait Count {
 
 impl Count for Grid {
     fn explore(&self, row: usize, col: usize, visited: &mut HashSet<(usize, usize)>) -> bool {
-        // Depth first has-path recursive algo with cyclical checks.
-        // Explores adjacent nodes that are marked as "L" and are not
-        // yet visited.
+        //Depth first has-path recursive algo with cyclical checks.
+        //Explores adjacent nodes that are marked as "L" and are not
+        //yet visited.
 
         let row_in_bounds: bool = row < self.grid.len();
         let col_in_bounds: bool = col < self.width;
@@ -42,9 +42,9 @@ impl Count for Grid {
     }
 
     fn island_count(&self) -> usize {
-        // Takes in a 2D grid array, iterates over the grid, traverses
-        // the internal components marked with "L" depth-first and returns
-        // the number of connected components within the 2D array.
+        //Takes in a 2D grid array, iterates over the grid, traverses
+        //the internal components marked with "L" depth-first and returns
+        //the number of connected components within the 2D array.
 
         let mut count: usize = 0;
         let mut visited: HashSet<(usize, usize)> = HashSet::new();
@@ -75,12 +75,12 @@ mod tests {
 
     fn create_grid() -> Grid {
         let mut grid = Grid::new(5);
-        assert!(grid.add_row(&["W", "L", "W", "W", "W"]).is_ok());
-        assert!(grid.add_row(&["W", "L", "W", "W", "W"]).is_ok());
-        assert!(grid.add_row(&["W", "W", "W", "L", "W"]).is_ok());
-        assert!(grid.add_row(&["W", "W", "L", "L", "W"]).is_ok());
-        assert!(grid.add_row(&["L", "W", "W", "L", "L"]).is_ok());
-        assert!(grid.add_row(&["L", "L", "W", "W", "W"]).is_ok());
+        grid.add_row(&["W", "L", "W", "W", "W"]);
+        grid.add_row(&["W", "L", "W", "W", "W"]);
+        grid.add_row(&["W", "W", "W", "L", "W"]);
+        grid.add_row(&["W", "W", "L", "L", "W"]);
+        grid.add_row(&["L", "W", "W", "L", "L"]);
+        grid.add_row(&["L", "L", "W", "W", "W"]);
         grid
     }
 

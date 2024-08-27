@@ -35,7 +35,6 @@ impl Bfs for Graph {
             if current == dst {
                 return true;
             }
-
             if let Some(neighbors) = self.nodes.get(&current) {
                 for neighbor in neighbors {
                     queue.push_back(neighbor.clone());

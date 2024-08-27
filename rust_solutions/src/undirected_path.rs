@@ -125,11 +125,11 @@ mod tests {
 
     fn create_graph() -> Graph {
         let mut graph = Graph::new();
-        let _ = graph.add_edge(&["i", "j"]).is_ok();
-        let _ = graph.add_edge(&["k", "i"]).is_ok();
-        let _ = graph.add_edge(&["m", "k"]).is_ok();
-        let _ = graph.add_edge(&["k", "l"]).is_ok();
-        let _ = graph.add_edge(&["o", "n"]).is_ok();
+        graph.add_edge(&["i", "j"]);
+        graph.add_edge(&["k", "i"]);
+        graph.add_edge(&["m", "k"]);
+        graph.add_edge(&["k", "l"]);
+        graph.add_edge(&["o", "n"]);
         graph.build_graph_from_edges();
         graph
     }

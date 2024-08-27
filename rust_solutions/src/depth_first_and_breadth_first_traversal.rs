@@ -17,7 +17,6 @@ impl Dfs for Graph {
         let mut stack = VecDeque::new();
         stack.push_back(src.to_string());
         let mut r_list = Vec::new();
-
         while let Some(current) = stack.pop_back() {
             println!("{current:?}");
             r_list.push(current.clone());
@@ -50,7 +49,6 @@ impl Bfs for Graph {
         while let Some(current) = queue.pop_front() {
             println!("{current:?}");
             r_list.push(current.clone());
-
             if let Some(neighbors) = self.nodes.get(&current) {
                 for neighbor in neighbors {
                     queue.push_back(neighbor.clone());
@@ -65,7 +63,7 @@ impl Bfs for Graph {
 mod tests {
     use super::*;
 
-    // # Our simple graph structure to play with
+    // Our simple graph structure to play with
     //
     // ┌───┐     ┌───┐
     // │   │     │   │

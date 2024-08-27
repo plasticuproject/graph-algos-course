@@ -35,10 +35,10 @@ impl Dfs for Graph {
     }
 
     fn depth_first_shortest_path(&self, node_a: &str, node_b: &str) -> i32 {
-        // Takes in a graph build from am adjacency list, traverses
-        // the graph epth-first and returns the number of edges
-        // from the source node to the destination node, or -1 if
-        // components are not connected.
+        //Takes in a graph build from am adjacency list, traverses
+        //the graph epth-first and returns the number of edges
+        //from the source node to the destination node, or -1 if
+        //components are not connected.
 
         let mut visited: HashSet<String> = HashSet::new();
         visited.insert(node_a.to_string());
@@ -69,10 +69,10 @@ impl Bfs for Graph {
     }
 
     fn breadth_first_shortest_path(&self, node_a: &str, node_b: &str) -> i32 {
-        // Takes in a graph build from an adjacency list, traverses
-        // the graph breadth-first and returns the number of edges
-        // from the source node to the destination node, or -1 if
-        // components are not connected.
+        //Takes in a graph build from an adjacency list, traverses
+        //the graph breadth-first and returns the number of edges
+        //from the source node to the destination node, or -1 if
+        //components are not connected.
 
         let mut visited: HashSet<String> = HashSet::new();
         visited.insert(node_a.to_string());
@@ -84,6 +84,7 @@ impl Bfs for Graph {
 #[cfg(test)]
 mod tests {
     use super::*;
+
     // Our simple undirected graph structure to play with
     //
     // ┌───┐     ┌───┐     ┌───┐
@@ -105,11 +106,11 @@ mod tests {
 
     fn create_graph() -> Graph {
         let mut graph = Graph::new();
-        let _ = graph.add_edge(&["w", "x"]).is_ok();
-        let _ = graph.add_edge(&["x", "y"]).is_ok();
-        let _ = graph.add_edge(&["z", "y"]).is_ok();
-        let _ = graph.add_edge(&["z", "v"]).is_ok();
-        let _ = graph.add_edge(&["w", "v"]).is_ok();
+        graph.add_edge(&["w", "x"]);
+        graph.add_edge(&["x", "y"]);
+        graph.add_edge(&["z", "y"]);
+        graph.add_edge(&["z", "v"]);
+        graph.add_edge(&["w", "v"]);
         graph.build_graph_from_edges();
         graph
     }
@@ -117,14 +118,12 @@ mod tests {
     #[test]
     fn depth_first_shortest_path_test() {
         let graph: Graph = create_graph();
-        println!("SHIT {:?}", graph.depth_first_shortest_path("w", "z"));
         assert!(graph.depth_first_shortest_path("w", "z") == 2);
     }
 
     #[test]
     fn breadth_shortest_path_test() {
         let graph: Graph = create_graph();
-        println!("SHIT {:?}", graph.breadth_first_shortest_path("w", "z"));
         assert!(graph.breadth_first_shortest_path("w", "z") == 2);
     }
 }
